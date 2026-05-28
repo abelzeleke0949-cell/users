@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+/* eslint-disable no-unused-vars */
+import { useState, useEffect } from "react";
 import UserCard from "../component/UserCard";
 import SearchBar from "../component/SearchBar";
 import Loader from "../component/Loader";
@@ -6,7 +7,7 @@ import Pagination from "../component/Pagination";
 
 const USERS_PER_PAGE = 6;
 
-function Home({ darkMode, toggleDark }) {
+function Home() {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -47,6 +48,7 @@ function Home({ darkMode, toggleDark }) {
 
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setCurrentPage(1);
     }, [query]);
 
@@ -72,6 +74,20 @@ function Home({ darkMode, toggleDark }) {
             user.company.name.toLowerCase().includes(q)
         );
     });
+ 
+   const [darkMode, setDarkMode] = useState(() => {
+    return localStorage.getItem("darkMode") === "true";
+  }
+  );
+
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+    localStorage.setItem("darkMode", darkMode);
+  }, [darkMode]);
 
 
     const totalPages = Math.ceil(filteredUsers.length / USERS_PER_PAGE);
@@ -94,7 +110,7 @@ function Home({ darkMode, toggleDark }) {
 
 
                 <button
-                    onClick={toggleDark}
+                    onClick={()=> setDarkMode(!darkMode)}
                     className="px-4 py-2 rounded-xl text-sm font-medium bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition shadow-sm"
                 >
                     {darkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
